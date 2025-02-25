@@ -1,8 +1,10 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useRef} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import WebViewComponent from './webview/WebviewContainer';
 import {useRoute} from '@react-navigation/native';
 import {parseRouteParams, toQueryString} from '../config/util';
+import CustomWebViewComponent from './webview/CustomWebViewComponent';
+import WebView from 'react-native-webview';
 
 interface OrderDetailParams {
   query: string;
@@ -12,6 +14,7 @@ interface OrderDetailParams {
 const DEFAULT_PARAMS: OrderDetailParams = {query: '', date: ''};
 
 export default function StoreListScreen() {
+  const webViewRef = useRef<WebView>(null);
   const route = useRoute();
 
   const params = parseRouteParams<OrderDetailParams>(
@@ -24,7 +27,7 @@ export default function StoreListScreen() {
 
   return (
     <View style={styles.container}>
-      <WebViewComponent uri={webViewUri} />
+      <CustomWebViewComponent ref={webViewRef} uri={webViewUri} />
     </View>
   );
 }

@@ -2,7 +2,7 @@ import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 
-const MarkerWithBorderTriangle = ({
+const ZoomedMarkerNoneClicked = ({
   latitude = 0,
   longitude = 0,
   text = '',
@@ -10,31 +10,32 @@ const MarkerWithBorderTriangle = ({
   selectedName = '',
 }) => {
   const textLength = text.length || 5;
-  const isSelected = (selectedName: string, name: string) =>
-    selectedName === name;
 
   if (!latitude || !longitude) return null;
   return (
     <NaverMapMarkerOverlay
-      key={`${latitude}-${longitude}-${selectedName}`}
       latitude={latitude}
       longitude={longitude}
       isForceShowIcon={true}
-      // zIndex={isSelected(selectedName, text) ? 2 : 1}
+      zIndex={240000}
+      globalZIndex={240000}
+      isHideCollidedMarkers={true}
+      isHideCollidedSymbols={true}
       onTap={() => onTap(text)}
+      image={{symbol: 'red'}}
       anchor={{x: 0.5, y: 0.5}}>
       <View
+        key={`${text}/${textLength}/${0}`}
+        collapsable={false}
         style={{
           flexDirection: 'row', // 가로 정렬
           justifyContent: 'center',
           alignItems: 'center',
-          // paddingHorizontal: 10, // 좌우 여백 추가
           overflow: 'hidden',
-          shadowColor: isSelected(selectedName, text) ? '#fff' : '#000',
+          shadowColor: '#000',
           shadowOffset: {width: 0, height: 1},
           shadowOpacity: 0.3,
           shadowRadius: 2,
-          // backgroundColor: 'red',
           width: textLength * 20,
         }}>
         <View style={{}}>
@@ -46,10 +47,7 @@ const MarkerWithBorderTriangle = ({
               justifyContent: 'center',
               alignItems: 'center',
               paddingHorizontal: 10,
-              // width: textLength * 22,
               overflow: 'hidden',
-              borderWidth: isSelected(selectedName, text) ? 2 : 0,
-              borderColor: isSelected(selectedName, text) ? '#000' : '#fff',
               borderRadius: 30,
             }}>
             <Text style={styles.markerText}>{text}</Text>
@@ -64,7 +62,7 @@ const MarkerWithBorderTriangle = ({
               borderTopWidth: 10,
               borderLeftColor: 'transparent',
               borderRightColor: 'transparent',
-              borderTopColor: isSelected(selectedName, text) ? 'black' : '#fff', // 삼각형 색상
+              borderTopColor: '#fff', // 삼각형 색상
               marginTop: -2, // 마커와 자연스럽게 연결
               left: 10,
             }}
@@ -82,35 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MarkerWithBorderTriangle;
-
-{
-  /* <View
-        style={{
-          backgroundColor: 'white',
-          width: 150, // 이미지 포함하도록 너비 조정
-          height: 50,
-          flexDirection: 'row', // 가로 정렬
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingHorizontal: 10, // 좌우 여백 추가
-          overflow: 'hidden',
-          borderBottomWidth: 2,
-          borderBottomColor: 'black',
-          borderTopWidth: 2,
-          borderTopColor: 'black',
-          borderRightWidth: 2,
-          borderRightColor: 'black',
-          borderLeftWidth: 2,
-          borderLeftColor: 'black',
-          borderRadius: 30,
-        }}>
-        <Image
-          source={require('../image/cake1.png')}
-          style={{width: 24, height: 24, marginRight: 5}} // 크기 및 여백 조정
-          resizeMode="contain"
-        />
-
-        <Text style={styles.markerText}>{text}</Text>
-      </View> */
-}
+export default ZoomedMarkerNoneClicked;

@@ -19,6 +19,11 @@ export type StorageMessage = {
   };
 };
 
+type SocialLoginMessage = {
+  type: 'LOGIN';
+  data: 'kakao' | 'apple';
+};
+
 export default function useMessageHandler() {
   const navigation = useNavigation<NavigationProp>();
 
@@ -92,6 +97,24 @@ export default function useMessageHandler() {
     }
   };
 
+  const handleSocialLogin = (route: WebViewMessage<any>) => {
+    try {
+      if (route?.data) return route.data as 'kakao' | 'apple';
+    } catch (e) {
+      console.error('오류:', e);
+    }
+  };
+
+  const handleSocialLogout = async (route: WebViewMessage<any>) => {
+    const keys = ['userId', 'nickname', 'profile_image'];
+
+    try {
+      await AsyncStorage.multiRemove(keys);
+    } catch (error) {
+      console.error('AsyncStorage 초기화 오류:', error);
+    }
+  };
+
   const messageConverter = async (route: WebViewMessage<unknown>) => {
     try {
       if (route.type === 'STORAGE') {
@@ -100,6 +123,14 @@ export default function useMessageHandler() {
         return handleNavigation(route as WebViewMessage<Params>);
       } else if (route.type === 'LOCATION') {
         return await handleFindLocation(route as WebViewMessage<any>);
+      } else if (route.type === 'LOGIN') {
+        return await handleSocialLogin(
+          route as WebViewMessage<SocialLoginMessage>,
+        );
+      } else if (route.type === 'LOGOUT') {
+        return await handleSocialLogout(
+          route as WebViewMessage<SocialLoginMessage>,
+        );
       }
     } catch (error) {
       console.error('onMessage JSON 파싱 오류:', error);

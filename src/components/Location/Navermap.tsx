@@ -6,6 +6,10 @@ import MarkerWithBorderTriangle from './NaverMap/MarkerWithBorderTriangle';
 
 import {X} from 'lucide-react-native';
 import DeviceLocationFinder from '../Address/DeviceLocationFinder';
+import TestMarkerWithBorderTriangle from './NaverMap/TestMarkerWithBorderTriangle';
+import TestMarkerWithBorderTriangle2 from './NaverMap/TestMarkerWithBorderTriangle2';
+import ZoomedMarkerClicked from './NaverMap/Markers/ZoomedMarkerClicked';
+import ZoomedMarkerNoneClicked from './NaverMap/Markers/ZoomedMarkerNoneClicked';
 
 const camera = {
   latitude: 37.439811,
@@ -40,7 +44,7 @@ const getDistanceBetween = (
 
 // 🔹 더미 데이터 (편의점 위치)
 const dummy = [
-  {_id: 'id1', name: '세븐일레븐', longitude: 127.1282, latitude: 37.4401},
+  {_id: 'id1', name: '세븐일레븐', longitude: 127.1282, latitude: 37.44011},
   {_id: 'id2', name: 'GS25', longitude: 127.1272, latitude: 37.4401},
   {_id: 'id3', name: '배스킨라빈스', longitude: 127.12852, latitude: 37.44016},
   {_id: 'id4', name: '핑크네일', longitude: 127.12802, latitude: 37.44053},
@@ -60,20 +64,33 @@ export default function MapScreen() {
   );
   const [selectedName, setSelectedName] = useState<string>('');
   const [filteredMarkers, setFilteredMarkers] = useState(dummy); // ✅ 반경 내 필터링된 데이터 상태
+  const [tabLoading, setTabLoading] = useState(false);
+
+  const prevMarkersRef = useRef(dummy);
 
   useEffect(() => {
     setCurrentMarker(zoom > 17 ? 'custom' : 'image');
   }, []);
 
+  const cameraChangeTimeout = useRef<NodeJS.Timeout | null>(null); // ✅ 타이머 저장용 ref
+
   // 🔹 카메라 이동 시 실행
   const handleCameraChange = (event: any) => {
-    setZoom(event.zoom);
-    setPosition({latitude: event.latitude, longitude: event.longitude});
+    if (cameraChangeTimeout.current) {
+      clearTimeout(cameraChangeTimeout.current); // 기존 타이머 제거
+    }
+
+    cameraChangeTimeout.current = setTimeout(() => {
+      console.log('Camera Changed');
+      setZoom(event.zoom);
+      setPosition({latitude: event.latitude, longitude: event.longitude});
+    }, 100);
   };
 
   // 🔹 카메라 이동이 멈추면 실행 (필터링 로직 포함)
   const handleCameraIdle = () => {
     setIsLoading(true);
+    console.log('?????????');
 
     // ✅ 500m 반경 내 데이터 필터링
     const nearbyMarkers = dummy.filter(({latitude, longitude}) => {
@@ -86,29 +103,30 @@ export default function MapScreen() {
       return distance <= MAX_DISTANCE_METERS;
     });
 
+    prevMarkersRef.current = filteredMarkers;
+
     setFilteredMarkers(nearbyMarkers); // ✅ 필터링된 마커 업데이트
-
-    const newMarker = zoom > 17 ? 'custom' : 'image';
-    if (newMarker !== currentMarker) {
-      setCurrentMarker(newMarker);
-    }
-
     setIsLoading(false);
   };
 
   // 🔹 마커 선택 시 실행
   const onTapMethod = (store: any) => {
-    setSelectedName(store.name); // 📌 선택한 마커의 이름 표시
+    setTabLoading(true);
 
     setPosition({latitude: store.latitude, longitude: store.longitude});
     if (mapRef.current) {
       mapRef.current?.animateCameraTo({
         latitude: store.latitude,
         longitude: store.longitude,
-        zoom: 17.1, // 클릭 시 확대
+        zoom: zoom > 17 ? zoom : 17.1, // 클릭 시 확대
         duration: 500,
       });
     }
+
+    // setTimeout(() => {
+    setSelectedName(store._id);
+    setTabLoading(false);
+    // }, 500);
   };
 
   return (
@@ -118,7 +136,8 @@ export default function MapScreen() {
         ref={mapRef} // 📌 ref 연결
         isRotateGesturesEnabled={false}
         isTiltGesturesEnabled={false}
-        isScrollGesturesEnabled={!isLoading}
+        isScrollGesturesEnabled={isLoading === true ? false : true}
+        isShowZoomControls={true}
         style={{flex: 1}}
         initialCamera={camera}
         logoAlign="TopRight"
@@ -126,16 +145,27 @@ export default function MapScreen() {
         onCameraChanged={handleCameraChange}
         onCameraIdle={handleCameraIdle}>
         {/* ✅ 필터링된 데이터만 마커로 표시 */}
-        {filteredMarkers.map(marker =>
-          currentMarker === 'custom' || (isLoading && zoom > 17) ? (
-            <MarkerWithBorderTriangle
-              key={marker._id}
-              latitude={marker.latitude}
-              longitude={marker.longitude}
-              text={marker.name}
-              onTap={() => onTapMethod(marker)}
-              selectedName={selectedName}
-            />
+        {(isLoading ? prevMarkersRef.current : filteredMarkers).map(marker =>
+          zoom > 17 ? (
+            <React.Fragment key={marker._id}>
+              {selectedName === marker._id ? (
+                <ZoomedMarkerClicked
+                  key={marker._id}
+                  latitude={marker.latitude}
+                  longitude={marker.longitude}
+                  text={marker.name}
+                  onTap={() => onTapMethod(marker)}
+                />
+              ) : (
+                <ZoomedMarkerNoneClicked
+                  key={marker._id}
+                  latitude={marker.latitude}
+                  longitude={marker.longitude}
+                  text={marker.name}
+                  onTap={() => onTapMethod(marker)}
+                />
+              )}
+            </React.Fragment>
           ) : (
             <MarkerWithImage
               key={marker._id}

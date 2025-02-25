@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
-import WebViewComponent from './webview/WebviewContainer';
+import CustomWebViewComponent from './webview/CustomWebViewComponent';
+import WebView from 'react-native-webview';
 
 export default function AddressSearchScreen() {
+  const webViewRef = useRef<WebView>(null);
+
   return (
     <View style={styles.container}>
-      <WebViewComponent uri="address/search" />
+      <CustomWebViewComponent ref={webViewRef} uri="address/search" />
     </View>
   );
 }

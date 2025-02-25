@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
-import TestWebViewComponent from './webview/CustomWebViewComponent';
+import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import WebView from 'react-native-webview';
 import useMessageHandler from './webview/useMessageHandler';
 import {useWebViewMessage} from 'react-native-react-bridge';
@@ -11,7 +11,7 @@ export default function LocationScreen() {
   const {messageConverter} = useMessageHandler();
 
   const {onMessage} = useWebViewMessage(message => {
-    messageConverter(message).then(rs => {
+    messageConverter(message).then((rs: any) => {
       if (message.type === 'LOCATION' && rs?.latitude && rs.longitude) {
         webViewRef.current?.postMessage(JSON.stringify(rs) || 'Guest');
       }
@@ -20,11 +20,10 @@ export default function LocationScreen() {
 
   return (
     <View style={styles.container}>
-      <TestWebViewComponent
+      <CustomWebViewComponent
         ref={webViewRef}
         uri="address"
         onListenMessage={onMessage}
-        // onLoadActive={checkAsyncStorage}
       />
     </View>
   );

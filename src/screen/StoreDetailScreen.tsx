@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import WebViewComponent from './webview/WebviewContainer';
 import {useRoute} from '@react-navigation/native';
 import {parseRouteParams, toQueryString} from '../config/util';
+import CustomWebViewComponent from './webview/CustomWebViewComponent';
+import WebView from 'react-native-webview';
 
 interface StoreDetailParams {
   storeId: string;
@@ -12,6 +14,7 @@ interface StoreDetailParams {
 const DEFAULT_PARAMS: StoreDetailParams = {storeId: ''};
 
 export default function StoreDetailScreen() {
+  const webViewRef = useRef<WebView>(null);
   const route = useRoute();
 
   const params = parseRouteParams<StoreDetailParams>(
@@ -24,7 +27,7 @@ export default function StoreDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <WebViewComponent uri={webViewUri} />
+      <CustomWebViewComponent ref={webViewRef} uri={webViewUri} />
     </View>
   );
 }

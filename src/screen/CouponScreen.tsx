@@ -3,11 +3,12 @@ import {StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import CustomWebViewComponent from './webview/CustomWebViewComponent';
 
-export default function NotificationScreen() {
+export default function CouponScreen() {
   const webViewRef = useRef<WebView>(null);
+
   return (
     <View style={styles.container}>
-      <CustomWebViewComponent ref={webViewRef} uri="notification" />
+      <CustomWebViewComponent ref={webViewRef} uri="mypage/coupon" />
     </View>
   );
 }

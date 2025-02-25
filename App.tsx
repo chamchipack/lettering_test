@@ -1,20 +1,51 @@
+// import * as React from 'react';
+// import MainNavigator from './src/navigation/Navigation';
+// import BeforeInitiativeWebView from './src/screen/splash/BeforeInitiativeWebView';
+
+// function App() {
+//   const [isWebViewFinished, setIsWebViewFinished] = React.useState(false);
+
+//   return (
+//     <>
+//       {isWebViewFinished ? (
+//         <MainNavigator />
+//       ) : (
+//         <BeforeInitiativeWebView
+//           onWebViewFinished={() => setIsWebViewFinished(true)}
+//         />
+//       )}
+//     </>
+//   );
+// }
+
+// export default App;
 import * as React from 'react';
+import {useEffect} from 'react';
+import {View} from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 import MainNavigator from './src/navigation/Navigation';
 import BeforeInitiativeWebView from './src/screen/splash/BeforeInitiativeWebView';
 
 function App() {
   const [isWebViewFinished, setIsWebViewFinished] = React.useState(false);
 
+  useEffect(() => {
+    SplashScreen.hide(); // ✅ 앱이 시작되면 스플래시 숨기기
+  }, []);
+
   return (
-    <>
+    <View style={{flex: 1}}>
       {isWebViewFinished ? (
         <MainNavigator />
       ) : (
         <BeforeInitiativeWebView
-          onWebViewFinished={() => setIsWebViewFinished(true)}
+          onWebViewFinished={() => {
+            setIsWebViewFinished(true);
+            SplashScreen.hide(); // ✅ 웹뷰가 끝났을 때도 스플래시 숨기기
+          }}
         />
       )}
-    </>
+    </View>
   );
 }
 

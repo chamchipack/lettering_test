@@ -1,60 +1,7 @@
-// import React, {useCallback, useEffect, useRef} from 'react';
-// import {StyleSheet, View} from 'react-native';
-// import WebView from 'react-native-webview';
-// import {useWebViewMessage} from 'react-native-react-bridge';
-// import useMessageHandler from './webview/useMessageHandler';
-
-// export default function HomeScreen() {
-//   const webViewRef = useRef<WebView>(null);
-//   const {messageConverter} = useMessageHandler();
-//   const {onMessage} = useWebViewMessage(message => {
-//     console.log(message);
-//     messageConverter(message);
-//   });
-
-//   return (
-//     <View style={styles.container}>
-//       <WebView
-//         ref={webViewRef}
-//         cacheEnabled={true}
-//         source={{uri: `http://192.168.0.11:9500/application/home`}}
-//         onMessage={onMessage}
-//         onLoadEnd={e => {
-//           const checkAsyncStorage = async () => {
-//             try {
-//               if (webViewRef.current) {
-//                 // 저장된 데이터가 있으면 웹뷰로 메시지 전송
-//                 setTimeout(() => {
-//                   console.log('wss'); //
-//                   webViewRef.current?.postMessage('hideModal');
-//                 }, 1000);
-//               }
-//             } catch (error) {
-//               console.error('Error retrieving data from AsyncStorage', error);
-//             }
-//           };
-
-//           checkAsyncStorage();
-//         }}
-//         onError={e => {
-//           console.log(e);
-//         }}
-//       />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//   },
-// });
-
-import React, {useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Animated, StyleSheet, TextInput, View} from 'react-native';
 import WebView from 'react-native-webview';
-import TestWebViewComponent from './webview/CustomWebViewComponent';
+import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
@@ -63,28 +10,61 @@ export default function HomeScreen() {
   const checkAsyncStorage = async () => {
     try {
       if (webViewRef.current) {
-        const nickname = await AsyncStorage.getItem('nickname');
-        webViewRef.current?.postMessage(nickname || 'Guest');
+        // const nickname = await AsyncStorage.getItem('nickname');
+        // webViewRef.current?.postMessage(nickname || 'Guest');
       }
     } catch (error) {
       console.error('Error retrieving data from AsyncStorage', error);
     }
   };
 
-  useEffect(() => {
-    const all = async () => {
-      const s = await AsyncStorage.getItem('longitude');
-      const d = await AsyncStorage.getItem('latitude');
-      const f = await AsyncStorage.getItem('address');
-    };
-  }, []);
+  const animatedValue = useRef(new Animated.Value(1)).current; // 🔹 애니메이션 값
+  const [inputVisible, setInputVisible] = useState(true); // 인풋 보이기 상태
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const handleScroll = (event: any) => {
+    // const yOffset = event.nativeEvent.contentOffset.y;
+    // if (yOffset > 50 && inputVisible) {
+    //   setInputVisible(false);
+    //   Animated.timing(animatedValue, {
+    //     toValue: 0,
+    //     duration: 100,
+    //     useNativeDriver: false,
+    //   }).start();
+    // } else if (yOffset <= 50 && !inputVisible) {
+    //   setInputVisible(true);
+    //   Animated.timing(animatedValue, {
+    //     toValue: 1,
+    //     duration: 100,
+    //     useNativeDriver: false,
+    //   }).start();
+    // }
+  };
 
   return (
     <View style={styles.container}>
-      <TestWebViewComponent
+      {/* <Animated.View
+        style={[
+          styles.inputContainer,
+          {
+            opacity: animatedValue,
+            height: animatedValue.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 40], // 0일 때 숨김, 40일 때 표시
+            }),
+          },
+        ]}>
+        <TextInput
+          style={styles.input}
+          placeholder="입력하세요"
+          placeholderTextColor="#999"
+        />
+      </Animated.View> */}
+      <CustomWebViewComponent
         ref={webViewRef}
         uri="home"
         onLoadActive={checkAsyncStorage}
+        onScroll={handleScroll}
       />
     </View>
   );
@@ -94,5 +74,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+  },
+  inputContainer: {
+    width: '100%',
+    overflow: 'hidden', // 높이 변경 시 부드럽게 숨김 효과
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#f0f0f0', // 회색 배경
+    paddingHorizontal: 10, // 내부 여백
+    borderRadius: 8, // 둥근 테두리 (선택)
+    borderWidth: 0, // 보더 없음
   },
 });

@@ -2,7 +2,7 @@ import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 
-const MarkerWithBorderTriangle = ({
+const MarkerWithBorderTriangle2 = ({
   latitude = 0,
   longitude = 0,
   text = '',
@@ -10,8 +10,6 @@ const MarkerWithBorderTriangle = ({
   selectedName = '',
 }) => {
   const textLength = text.length || 5;
-  const isSelected = (selectedName: string, name: string) =>
-    selectedName === name;
 
   if (!latitude || !longitude) return null;
   return (
@@ -30,7 +28,7 @@ const MarkerWithBorderTriangle = ({
           alignItems: 'center',
           // paddingHorizontal: 10, // 좌우 여백 추가
           overflow: 'hidden',
-          shadowColor: isSelected(selectedName, text) ? '#fff' : '#000',
+          shadowColor: '#000',
           shadowOffset: {width: 0, height: 1},
           shadowOpacity: 0.3,
           shadowRadius: 2,
@@ -48,8 +46,8 @@ const MarkerWithBorderTriangle = ({
               paddingHorizontal: 10,
               // width: textLength * 22,
               overflow: 'hidden',
-              borderWidth: isSelected(selectedName, text) ? 2 : 0,
-              borderColor: isSelected(selectedName, text) ? '#000' : '#fff',
+              //   borderWidth: isSelected(selectedName, text) ? 2 : 0,
+              //   borderColor: isSelected(selectedName, text) ? '#000' : '#fff',
               borderRadius: 30,
             }}>
             <Text style={styles.markerText}>{text}</Text>
@@ -64,7 +62,7 @@ const MarkerWithBorderTriangle = ({
               borderTopWidth: 10,
               borderLeftColor: 'transparent',
               borderRightColor: 'transparent',
-              borderTopColor: isSelected(selectedName, text) ? 'black' : '#fff', // 삼각형 색상
+              borderTopColor: '#fff', // 삼각형 색상
               marginTop: -2, // 마커와 자연스럽게 연결
               left: 10,
             }}
@@ -82,7 +80,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MarkerWithBorderTriangle;
+export default MarkerWithBorderTriangle2;
 
 {
   /* <View

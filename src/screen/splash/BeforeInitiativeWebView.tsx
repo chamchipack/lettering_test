@@ -6,7 +6,15 @@ type BeforeInitiativeWebViewProps = {
   onWebViewFinished: () => void;
 };
 
-const keys = ['nickname', 'address', 'longitude', 'latitude', 'userId'];
+const keys = [
+  'nickname',
+  'address',
+  'longitude',
+  'latitude',
+  'userId',
+  'profile_image',
+  'location_list',
+];
 
 export default function BeforeInitiativeWebView({
   onWebViewFinished,
@@ -22,7 +30,6 @@ export default function BeforeInitiativeWebView({
           acc[key] = value ?? null;
           return acc;
         }, {});
-
         // console.log(parsedData);
         webViewRef.current?.postMessage(JSON.stringify(parsedData));
       }
@@ -31,6 +38,8 @@ export default function BeforeInitiativeWebView({
     }
   };
 
+  console.log('????');
+
   return (
     <WebView
       ref={webViewRef}
@@ -38,7 +47,11 @@ export default function BeforeInitiativeWebView({
       source={{uri: `http://192.168.0.11:9500/splash`}}
       onLoadEnd={checkAsyncStorage}
       onError={e => console.error('WebView error:', e)}
-      onLoad={() => onWebViewFinished()} // 로딩 완료 시 콜백 실행
+      onLoad={() => {
+        setTimeout(() => {
+          onWebViewFinished();
+        }, 1500);
+      }} // 로딩 완료 시 콜백 실행
     />
   );
 }

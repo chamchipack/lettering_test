@@ -51,6 +51,7 @@ const WebViewComponent = forwardRef(({uri}: WebViewComponentProps, ref) => {
         onError={e => {
           console.log(e);
         }}
+        cacheMode="LOAD_CACHE_ELSE_NETWORK" // 캐시가 있으면 사용, 없으면 네트워크에서 로드
       />
     </>
   );

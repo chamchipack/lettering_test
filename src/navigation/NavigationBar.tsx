@@ -20,6 +20,7 @@ const NAV_ITEMS = [
     Icon: ClipboardList,
   },
   {label: '마이', key: 'MyPage', path: 'mypage', Icon: User},
+  // {label: '결제', key: 'Payments', path: 'payments', Icon: User},
 ];
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;

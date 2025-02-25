@@ -19,6 +19,13 @@ import MyReviewScreen from '../screen/MyReviewScreen';
 import PolicyScreen from '../screen/PolicyScreen';
 import AddressListScreen from '../screen/AddressListScreen';
 import AddressSearchScreen from '../screen/AddressSearchScreen';
+import LoginScreen from '../screen/LoginScreen';
+import Header from './Header';
+import {Text} from 'react-native';
+import PolicyDetailScreen from '../screen/PolicyDetailScreen';
+import CouponScreen from '../screen/CouponScreen';
+import SettingScreen from '../screen/SettingScreen';
+import PaymentScreen from '../screen/PaymentScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,16 +45,47 @@ const Stack = createNativeStackNavigator();
 export default function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="home" component={HomeScreen} />
-      <Stack.Screen name="mypage" component={MyPageScreen} />
+      <Stack.Screen
+        name="home"
+        component={HomeScreen}
+        options={{animation: 'none'}}
+      />
+      <Stack.Screen
+        name="mypage"
+        component={MyPageScreen}
+        options={{animation: 'none'}}
+      />
+      <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="policy" component={PolicyScreen} />
+      <Stack.Screen
+        name="policy/policy-detail"
+        component={PolicyDetailScreen}
+      />
       <Stack.Screen name="profile" component={ProfileScreen} />
       <Stack.Screen name="mypage/interest" component={InterestScreen} />
-      <Stack.Screen name="search" component={SearchScreen} />
+      <Stack.Screen name="mypage/coupon" component={CouponScreen} />
+      <Stack.Screen name="setting" component={SettingScreen} />
+      <Stack.Screen name="payments" component={PaymentScreen} />
+      <Stack.Screen
+        name="search"
+        component={SearchScreen}
+        options={{
+          animation: 'none',
+        }}
+      />
+
       <Stack.Screen name="store-list" component={StoreListScreen} />
       <Stack.Screen name="store-detail" component={StoreDetailScreen} />
-      <Stack.Screen name="location" component={LocationScreen} />
-      <Stack.Screen name="order-list" component={OrderListScreen} />
+      <Stack.Screen
+        name="location"
+        component={LocationScreen}
+        options={{animation: 'none'}}
+      />
+      <Stack.Screen
+        name="order-list"
+        component={OrderListScreen}
+        options={{animation: 'none'}}
+      />
       <Stack.Screen name="order-detail" component={OrderDetailScreen} />
       <Stack.Screen name="order" component={OrderScreen} />
       <Stack.Screen name="create-review" component={CreateReviewScreen} />

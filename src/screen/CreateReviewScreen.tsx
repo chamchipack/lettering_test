@@ -1,11 +1,14 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
-import WebViewComponent from './webview/WebviewContainer';
+import WebView from 'react-native-webview';
+import CustomWebViewComponent from './webview/CustomWebViewComponent';
 
 export default function CreateReview() {
+  const webViewRef = useRef<WebView>(null);
+
   return (
     <View style={styles.container}>
-      <WebViewComponent uri="create-review" />
+      <CustomWebViewComponent ref={webViewRef} uri="create-review" />
     </View>
   );
 }
