@@ -27,7 +27,7 @@ const CustomWebViewComponent = forwardRef<WebView, CustomWebViewComponentProps>(
         <WebView
           ref={webViewRef}
           cacheEnabled={true}
-          source={{uri: `http://192.168.0.11:9500/application/${uri}`}}
+          source={{uri: `http://192.168.0.123:9500/application/${uri}`}}
           onMessage={onListenMessage ? onListenMessage : onMessage}
           onLoadEnd={onLoadActive}
           onError={e => console.error('WebView Load Error:', e)}

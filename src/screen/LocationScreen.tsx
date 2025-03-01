@@ -1,12 +1,14 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import NaverMap from '../components/Location/Navermap';
+import NavigationBar from '../navigation/NavigationBar';
 
 export default function LocationScreen() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <NaverMap />
-    </View>
+      <NavigationBar />
+    </SafeAreaView>
   );
 }
 

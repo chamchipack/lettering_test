@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import useMessageHandler from './webview/useMessageHandler';
 import {useWebViewMessage} from 'react-native-react-bridge';
@@ -11,9 +11,9 @@ export default function PaymentScreen() {
     console.log(message);
   });
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomWebViewComponent uri="payments" onListenMessage={onMessage} />
-    </View>
+    </SafeAreaView>
   );
 }
 

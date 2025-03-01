@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import WebView from 'react-native-webview';
 import useMessageHandler from './webview/useMessageHandler';
@@ -19,13 +19,13 @@ export default function LocationScreen() {
   });
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomWebViewComponent
         ref={webViewRef}
         uri="address"
         onListenMessage={onMessage}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

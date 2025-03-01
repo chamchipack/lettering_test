@@ -1,17 +1,18 @@
+import Geo from '@react-native-community/geolocation';
 import {Platform, PermissionsAndroid} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import {check, PERMISSIONS, request} from 'react-native-permissions';
 
 async function requestPermission() {
   try {
     if (Platform.OS === 'ios') {
-      const status = await Geolocation.requestAuthorization('whenInUse');
-      if (status === 'granted') {
-        console.log('iOS 위치 권한 허용됨 (whenInUse)');
-        return true;
-      } else {
-        console.log('iOS 위치 권한 거부됨');
-        return false;
-      }
+      return true;
+      // if (status === 'granted') {
+      //   console.log('iOS 위치 권한 허용됨 (whenInUse)');
+      //   return true;
+      // } else {
+      //   console.log('iOS 위치 권한 거부됨');
+      //   return false;
+      // }
     } else if (Platform.OS === 'android') {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -35,26 +36,26 @@ async function requestPermission() {
 export async function getDeviceLocation(): Promise<{
   latitude: number;
   longitude: number;
+  status: boolean;
 } | null> {
   const hasPermission = await requestPermission();
+  console.log(hasPermission);
   if (!hasPermission) {
-    console.warn('위치 권한이 없습니다.');
-    return null;
+    return {latitude: 0, longitude: 0, status: false};
   }
 
   return new Promise((resolve, reject) => {
-    Geolocation.getCurrentPosition(
+    Geo.getCurrentPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        console.log('현재 위치:', {latitude, longitude});
-        resolve({latitude, longitude});
+        console.log(latitude, longitude);
+        resolve({latitude, longitude, status: true});
       },
       error => {
-        console.error('위치 가져오기 실패:', error);
-        reject(null);
+        reject({latitude: 0, longitude: 0, status: false});
       },
       {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 15000,
         maximumAge: 10000,
       },

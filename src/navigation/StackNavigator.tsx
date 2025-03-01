@@ -12,8 +12,8 @@ import OrderScreen from '../screen/OrderScreen';
 import ReviewScreen from '../screen/ReviewScreen';
 import OrderDetailScreen from '../screen/OrderDetailScreen';
 import ProfileScreen from '../screen/ProfileScreen';
-import StoreListScreen from '../screen/StoreListScreen';
-import StoreDetailScreen from '../screen/StoreDetailScreen';
+import SellerListScreen from '../screen/SellerListScreen';
+import SellerDetailScreen from '../screen/SellerDetailScreen';
 import InterestScreen from '../screen/InterestScreen';
 import MyReviewScreen from '../screen/MyReviewScreen';
 import PolicyScreen from '../screen/PolicyScreen';
@@ -74,8 +74,8 @@ export default function StackNavigator() {
         }}
       />
 
-      <Stack.Screen name="store-list" component={StoreListScreen} />
-      <Stack.Screen name="store-detail" component={StoreDetailScreen} />
+      <Stack.Screen name="seller-list" component={SellerListScreen} />
+      <Stack.Screen name="seller-detail" component={SellerDetailScreen} />
       <Stack.Screen
         name="location"
         component={LocationScreen}

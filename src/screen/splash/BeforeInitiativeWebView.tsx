@@ -44,13 +44,11 @@ export default function BeforeInitiativeWebView({
     <WebView
       ref={webViewRef}
       cacheEnabled={true}
-      source={{uri: `http://192.168.0.11:9500/splash`}}
+      source={{uri: `http://192.168.0.123:9500/splash`}}
       onLoadEnd={checkAsyncStorage}
       onError={e => console.error('WebView error:', e)}
       onLoad={() => {
-        setTimeout(() => {
-          onWebViewFinished();
-        }, 1500);
+        onWebViewFinished();
       }} // 로딩 완료 시 콜백 실행
     />
   );

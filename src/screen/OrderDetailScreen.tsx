@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebViewComponent from './webview/WebviewContainer';
 import {useRoute} from '@react-navigation/native';
 import {toQueryString, parseRouteParams} from '../config/util'; // ✅ 유틸 함수 import
@@ -26,9 +26,9 @@ export default function OrderDetailScreen() {
   const webViewUri = `order-detail?${queryString}`;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomWebViewComponent ref={webViewRef} uri={webViewUri} />
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -29,9 +29,15 @@ import BeforeInitiativeWebView from './src/screen/splash/BeforeInitiativeWebView
 function App() {
   const [isWebViewFinished, setIsWebViewFinished] = React.useState(false);
 
-  useEffect(() => {
-    SplashScreen.hide(); // ✅ 앱이 시작되면 스플래시 숨기기
-  }, []);
+  // useEffect(() => {
+  //   SplashScreen.hide(); // ✅ 앱이 시작되면 스플래시 숨기기
+  // }, []);
+  const hideSplash = () => {
+    setTimeout(() => {
+      SplashScreen.hide(); // ✅ 웹뷰가 끝났을 때도 스플래시 숨기기
+      setIsWebViewFinished(true);
+    }, 1000);
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -40,8 +46,7 @@ function App() {
       ) : (
         <BeforeInitiativeWebView
           onWebViewFinished={() => {
-            setIsWebViewFinished(true);
-            SplashScreen.hide(); // ✅ 웹뷰가 끝났을 때도 스플래시 숨기기
+            hideSplash();
           }}
         />
       )}

@@ -1,55 +1,19 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useState, useRef} from 'react';
+import {View} from 'react-native';
 import {NaverMapView, NaverMapViewRef} from '@mj-studio/react-native-naver-map';
 import MarkerWithImage from './NaverMap/MarkerWithImage';
-import MarkerWithBorderTriangle from './NaverMap/MarkerWithBorderTriangle';
 
-import {X} from 'lucide-react-native';
 import DeviceLocationFinder from '../Address/DeviceLocationFinder';
-import TestMarkerWithBorderTriangle from './NaverMap/TestMarkerWithBorderTriangle';
-import TestMarkerWithBorderTriangle2 from './NaverMap/TestMarkerWithBorderTriangle2';
 import ZoomedMarkerClicked from './NaverMap/Markers/ZoomedMarkerClicked';
 import ZoomedMarkerNoneClicked from './NaverMap/Markers/ZoomedMarkerNoneClicked';
+import SelectionBox from './NaverMap/Selection/SelectionBox';
+import {dummy, getDistanceBetween, MAX_DISTANCE_METERS} from './NaverMap/tools';
 
 const camera = {
   latitude: 37.439811,
   longitude: 127.12798,
   zoom: 16.8, // 초기 줌 레벨
 };
-
-const EARTH_RADIUS_KM = 6371; // 지구 반지름 (km)
-const MAX_DISTANCE_METERS = 500; // ✅ 반경 500m 내 데이터만 표시
-
-// 🔹 위도/경도를 이용한 거리 계산 함수
-const getDistanceBetween = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-) => {
-  const toRad = (value: number) => (value * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return EARTH_RADIUS_KM * c * 1000; // ✅ km → m 변환
-};
-
-// 🔹 더미 데이터 (편의점 위치)
-const dummy = [
-  {_id: 'id1', name: '세븐일레븐', longitude: 127.1282, latitude: 37.44011},
-  {_id: 'id2', name: 'GS25', longitude: 127.1272, latitude: 37.4401},
-  {_id: 'id3', name: '배스킨라빈스', longitude: 127.12852, latitude: 37.44016},
-  {_id: 'id4', name: '핑크네일', longitude: 127.12802, latitude: 37.44053},
-  {_id: 'id5', name: '잠실역', longitude: 127.102387, latitude: 37.513442},
-];
 
 export default function MapScreen() {
   const mapRef = useRef<NaverMapViewRef>(null); // 📌 지도 컨트롤을 위한 ref 추가
@@ -59,18 +23,10 @@ export default function MapScreen() {
     longitude: camera.longitude,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [currentMarker, setCurrentMarker] = useState<'custom' | 'image' | null>(
-    null,
-  );
   const [selectedName, setSelectedName] = useState<string>('');
   const [filteredMarkers, setFilteredMarkers] = useState(dummy); // ✅ 반경 내 필터링된 데이터 상태
-  const [tabLoading, setTabLoading] = useState(false);
 
   const prevMarkersRef = useRef(dummy);
-
-  useEffect(() => {
-    setCurrentMarker(zoom > 17 ? 'custom' : 'image');
-  }, []);
 
   const cameraChangeTimeout = useRef<NodeJS.Timeout | null>(null); // ✅ 타이머 저장용 ref
 
@@ -81,7 +37,6 @@ export default function MapScreen() {
     }
 
     cameraChangeTimeout.current = setTimeout(() => {
-      console.log('Camera Changed');
       setZoom(event.zoom);
       setPosition({latitude: event.latitude, longitude: event.longitude});
     }, 100);
@@ -90,7 +45,6 @@ export default function MapScreen() {
   // 🔹 카메라 이동이 멈추면 실행 (필터링 로직 포함)
   const handleCameraIdle = () => {
     setIsLoading(true);
-    console.log('?????????');
 
     // ✅ 500m 반경 내 데이터 필터링
     const nearbyMarkers = dummy.filter(({latitude, longitude}) => {
@@ -111,29 +65,24 @@ export default function MapScreen() {
 
   // 🔹 마커 선택 시 실행
   const onTapMethod = (store: any) => {
-    setTabLoading(true);
-
     setPosition({latitude: store.latitude, longitude: store.longitude});
     if (mapRef.current) {
       mapRef.current?.animateCameraTo({
         latitude: store.latitude,
         longitude: store.longitude,
-        zoom: zoom > 17 ? zoom : 17.1, // 클릭 시 확대
+        // zoom: zoom > 17 ? zoom : 17.1, // 클릭 시 확대
         duration: 500,
       });
     }
 
-    // setTimeout(() => {
     setSelectedName(store._id);
-    setTabLoading(false);
-    // }, 500);
   };
 
   return (
     <View style={{flex: 1}}>
       <DeviceLocationFinder />
       <NaverMapView
-        ref={mapRef} // 📌 ref 연결
+        ref={mapRef}
         isRotateGesturesEnabled={false}
         isTiltGesturesEnabled={false}
         isScrollGesturesEnabled={isLoading === true ? false : true}
@@ -144,7 +93,6 @@ export default function MapScreen() {
         minZoom={12}
         onCameraChanged={handleCameraChange}
         onCameraIdle={handleCameraIdle}>
-        {/* ✅ 필터링된 데이터만 마커로 표시 */}
         {(isLoading ? prevMarkersRef.current : filteredMarkers).map(marker =>
           zoom > 17 ? (
             <React.Fragment key={marker._id}>
@@ -167,83 +115,36 @@ export default function MapScreen() {
               )}
             </React.Fragment>
           ) : (
-            <MarkerWithImage
-              key={marker._id}
-              latitude={marker.latitude}
-              longitude={marker.longitude}
-              text={marker.name}
-              onTap={() => onTapMethod(marker)}
-            />
+            <React.Fragment key={marker._id}>
+              {selectedName === marker._id ? (
+                <ZoomedMarkerClicked
+                  key={marker._id}
+                  latitude={marker.latitude}
+                  longitude={marker.longitude}
+                  text={marker.name}
+                  onTap={() => onTapMethod(marker)}
+                />
+              ) : (
+                <MarkerWithImage
+                  key={marker._id}
+                  latitude={marker.latitude}
+                  longitude={marker.longitude}
+                  text={marker.name}
+                  onTap={() => onTapMethod(marker)}
+                />
+              )}
+            </React.Fragment>
           ),
         )}
       </NaverMapView>
 
       {/* 📌 선택한 마커의 이름을 하단에 표시 */}
       {selectedName && (
-        <View style={styles.selectedContainer}>
-          {/* 좌측 이미지 */}
-          <View style={styles.imageBox}></View>
-
-          {/* 가게 정보 (이름 + 주소) */}
-          <View style={styles.storeInfo}>
-            <Text style={styles.storeName}>{selectedName}</Text>
-            <Text style={styles.storeAddress}>서울특별시 강남구 역삼동</Text>
-          </View>
-
-          {/* 우측 닫기 버튼 */}
-          <X
-            size={24}
-            color="black"
-            onPress={() => setSelectedName('')}
-            style={styles.closeIcon}
-          />
-        </View>
+        <SelectionBox
+          selectedName={selectedName}
+          setSelectedName={setSelectedName}
+        />
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  selectedContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-    flexDirection: 'row', // 가로 정렬
-    alignItems: 'center',
-  },
-  imageBox: {
-    width: 100,
-    height: 100,
-    backgroundColor: '#ddd', // 임시 배경
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginRight: 10,
-  },
-  storeInfo: {
-    flex: 1,
-  },
-  storeName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 5,
-  },
-  storeAddress: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-});

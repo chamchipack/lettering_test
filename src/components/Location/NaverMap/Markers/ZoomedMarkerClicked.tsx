@@ -1,6 +1,11 @@
 import {NaverMapMarkerOverlay} from '@mj-studio/react-native-naver-map';
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Platform} from 'react-native';
+
+type Form = {
+  width: number;
+  height?: number;
+};
 
 const ZoomedMarkerClicked = ({
   latitude = 0,
@@ -11,6 +16,12 @@ const ZoomedMarkerClicked = ({
 }) => {
   const textLength = text.length || 5;
 
+  const form: Form = {
+    width: textLength * 20,
+  };
+
+  if (Platform.OS === 'android') form['height'] = 50;
+
   if (!latitude || !longitude) return null;
 
   if (!text) return null;
@@ -20,10 +31,11 @@ const ZoomedMarkerClicked = ({
       latitude={latitude}
       longitude={longitude}
       isForceShowIcon={true}
+      {...form}
       zIndex={250000}
       globalZIndex={250000}
       onTap={onTap}
-      anchor={{x: 0.5, y: 0.5}}>
+      anchor={{x: 0.2, y: 1}}>
       <View
         key={`${text}/${textLength}/${0}`}
         collapsable={false}
@@ -38,7 +50,7 @@ const ZoomedMarkerClicked = ({
           <View
             style={{
               height: 35,
-              backgroundColor: 'white',
+              backgroundColor: '#fff',
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',

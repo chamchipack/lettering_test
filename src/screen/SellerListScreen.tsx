@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import WebViewComponent from './webview/WebviewContainer';
 import {useRoute} from '@react-navigation/native';
 import {parseRouteParams, toQueryString} from '../config/util';
@@ -23,12 +23,12 @@ export default function StoreListScreen() {
   );
 
   const queryString = toQueryString({query: params.query, date: params.date});
-  const webViewUri = `store-list?${queryString}`;
+  const webViewUri = `seller-list?${queryString}`;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomWebViewComponent ref={webViewRef} uri={webViewUri} />
-    </View>
+    </SafeAreaView>
   );
 }
 

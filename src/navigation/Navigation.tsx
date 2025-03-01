@@ -12,10 +12,10 @@ function MainNavigator() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <SafeAreaView style={styles.container}>
-        <StackNavigator />
-        <NavigationBar navigationRef={navigationRef} />
-      </SafeAreaView>
+      {/* <SafeAreaView style={styles.container}> */}
+      <StackNavigator />
+      {/* <NavigationBar navigationRef={navigationRef} /> */}
+      {/* </SafeAreaView> */}
     </NavigationContainer>
   );
 }

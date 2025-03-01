@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {parseRouteParams, toQueryString} from '../config/util';
 import CustomWebViewComponent from './webview/CustomWebViewComponent';
@@ -26,9 +26,9 @@ export default function InterestScreen() {
   const webViewUri = `policy/policy-detail?${queryString}`;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomWebViewComponent ref={webViewRef} uri={webViewUri} />
-    </View>
+    </SafeAreaView>
   );
 }
 

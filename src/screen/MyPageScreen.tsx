@@ -1,15 +1,17 @@
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import CustomWebViewComponent from './webview/CustomWebViewComponent';
+import NavigationBar from '../navigation/NavigationBar';
 
 export default function MyPageScreen() {
   const webViewRef = useRef<WebView>(null);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CustomWebViewComponent ref={webViewRef} uri="mypage" />
-    </View>
+      <NavigationBar />
+    </SafeAreaView>
   );
 }
 
