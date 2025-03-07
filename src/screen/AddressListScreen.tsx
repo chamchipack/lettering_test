@@ -4,8 +4,11 @@ import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import WebView from 'react-native-webview';
 import useMessageHandler from './webview/useMessageHandler';
 import {useWebViewMessage} from 'react-native-react-bridge';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function LocationScreen() {
+const keys = ['address', 'longitude', 'latitude', 'location_list'];
+
+export default function AddressListScreen() {
   const webViewRef = useRef<WebView>(null);
 
   const {messageConverter} = useMessageHandler();

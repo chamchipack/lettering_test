@@ -3,10 +3,12 @@ import {SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
 import WebViewComponent from './webview/WebviewContainer';
 import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import NavigationBar from '../navigation/NavigationBar';
+import CustomHeader from '../components/Input/CustomHeader';
 
 export default function SearchScreen() {
   return (
     <SafeAreaView style={styles.container}>
+      {/* <CustomHeader /> */}
       <CustomWebViewComponent uri="search" />
       <NavigationBar />
     </SafeAreaView>

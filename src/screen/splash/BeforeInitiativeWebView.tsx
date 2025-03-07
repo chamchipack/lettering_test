@@ -16,6 +16,8 @@ const keys = [
   'location_list',
 ];
 
+// const domain = 'https://lettering.chamchipack.com/';
+const domain = 'http://192.168.0.16:9500/';
 export default function BeforeInitiativeWebView({
   onWebViewFinished,
 }: BeforeInitiativeWebViewProps) {
@@ -44,7 +46,7 @@ export default function BeforeInitiativeWebView({
     <WebView
       ref={webViewRef}
       cacheEnabled={true}
-      source={{uri: `http://192.168.0.123:9500/splash`}}
+      source={{uri: `${domain}splash`}}
       onLoadEnd={checkAsyncStorage}
       onError={e => console.error('WebView error:', e)}
       onLoad={() => {

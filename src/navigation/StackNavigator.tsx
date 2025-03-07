@@ -20,12 +20,14 @@ import PolicyScreen from '../screen/PolicyScreen';
 import AddressListScreen from '../screen/AddressListScreen';
 import AddressSearchScreen from '../screen/AddressSearchScreen';
 import LoginScreen from '../screen/LoginScreen';
-import Header from './Header';
-import {Text} from 'react-native';
 import PolicyDetailScreen from '../screen/PolicyDetailScreen';
 import CouponScreen from '../screen/CouponScreen';
 import SettingScreen from '../screen/SettingScreen';
 import PaymentScreen from '../screen/PaymentScreen';
+import PaymentFailedScreen from '../screen/PaymentFailedScreen';
+import PaymentSuccessScreen from '../screen/PaymentSuccessScreen';
+import OrderCompleteScreen from '../screen/OrderCompleteScreen';
+import OrderFailedScreen from '../screen/OrderFailedScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +68,8 @@ export default function StackNavigator() {
       <Stack.Screen name="mypage/coupon" component={CouponScreen} />
       <Stack.Screen name="setting" component={SettingScreen} />
       <Stack.Screen name="payments" component={PaymentScreen} />
+      <Stack.Screen name="payments/success" component={PaymentSuccessScreen} />
+      <Stack.Screen name="payments/failed" component={PaymentFailedScreen} />
       <Stack.Screen
         name="search"
         component={SearchScreen}
@@ -88,6 +92,8 @@ export default function StackNavigator() {
       />
       <Stack.Screen name="order-detail" component={OrderDetailScreen} />
       <Stack.Screen name="order" component={OrderScreen} />
+      <Stack.Screen name="order-complete" component={OrderCompleteScreen} />
+      <Stack.Screen name="order-failed" component={OrderFailedScreen} />
       <Stack.Screen name="create-review" component={CreateReviewScreen} />
       <Stack.Screen name="review" component={ReviewScreen} />
       <Stack.Screen name="review/individual" component={MyReviewScreen} />

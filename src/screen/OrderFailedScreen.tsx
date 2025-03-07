@@ -4,10 +4,10 @@ import CustomWebViewComponent from './webview/CustomWebViewComponent';
 import useMessageHandler from './webview/useMessageHandler';
 import {useWebViewMessage} from 'react-native-react-bridge';
 
-export default function PaymentScreen() {
+export default function OrderFailedScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <CustomWebViewComponent uri="payments" />
+      <CustomWebViewComponent uri="order-failed" />
     </SafeAreaView>
   );
 }
